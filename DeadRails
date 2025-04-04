@@ -153,7 +153,7 @@ AutoUse:AddSlider("HealthUseBandage", {
 	Callback = function(v)
 _G.HealthUseBandage = v
 end})
-Proximity:AddCheckbox("UseBandage", {
+AutoUse:AddCheckbox("UseBandage", {
 	Text = "Giữ Băng Để Dùng",
 	Default = false,
 	Callback = function(v)
@@ -176,7 +176,7 @@ AutoUse:AddSlider("HealthUseSnakeOil", {
 	Callback = function(v)
 _G.HealthUseSnakeOil = v
 end})
-Proximity:AddCheckbox("UseSnakeOil", {
+AutoUse:AddCheckbox("UseSnakeOil", {
 	Text = "Giữ Dầu Rắn Để Dùng",
 	Default = false,
 	Callback = function(v)
@@ -193,9 +193,195 @@ end
 end
 end)
 end})
+local GunAmmo = Tabs.Main:AddLeftGroupbox("Đạn Súng")
+GunAmmo:AddCheckbox("AutoRevolverAmmo", {
+	Text = "Tự Động Lấy Đạn Súng Lục",
+	Default = false,
+	Callback = function(v)
+_G.AutoRevolverShells = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("RevolverAmmo") then
+if _G.AutoRevolverShells then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("RevolverAmmo")
+}
 
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end)
+end})
+GunAmmo:AddCheckbox("AutoShotgunAmmo", {
+	Text = "Tự Động Lấy Đạn Súng Ngắn",
+	Default = false,
+	Callback = function(v)
+_G.AutoShotgunShells = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("ShotgunShells") then
+if _G.AutoShotgunShells then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("ShotgunShells")
+}
 
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end)
+end})
+GunAmmo:AddCheckbox("AutoRefleAmmo", {
+	Text = "Tự Động Lấy Đạn Súng Trường",
+	Default = false,
+	Callback = function(v)
+_G.AutoRifleShells = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("RifleAmmo") then
+if _G.AutoRifleShells then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("RifleAmmo")
+}
 
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end)
+end})
+local Gun = Tabs.Main:AddRightGroupbox("Súng")
+Gun:AddCheckbox("AutoRevolver", {
+	Text = "Tự Động Súng Lục",
+	Default = false,
+	Callback = function(v)
+_G.AutoRevolver = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Revolver") then
+if _G.AutoRevolver then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Revolver")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoNavyRevolver", {
+	Text = "Tự Động Súng Lục Hải Quân",
+	Default = false,
+	Callback = function(v)
+_G.AutoNavyRevolver = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Navy Revolver") then
+if _G.AutoNavyRevolver then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Navy Revolver")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoMauser", {
+	Text = "Tự Động Ma Súc",
+	Default = false,
+	Callback = function(v)
+_G.AutoMauserC96 = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Mauser") then
+if _G.AutoMauserC96 then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Mauser")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoShotgun", {
+	Text = "Tự Động Súng Ngắn",
+	Default = false,
+	Callback = function(v)
+_G.AutoShotgun = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Shotgun") then
+if _G.AutoShotgun then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Shotgun")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoSawedOffShotgun", {
+	Text = "Tự Động Súng Ngắn Cưa Nòng",
+	Default = false,
+	Callback = function(v)
+_G.AutoSawedOffShotgun = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Sawed-Off Shotgun") then
+if _G.AutoSawedOffShotgun then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Sawed-Off Shotgun")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoRifle", {
+	Text = "Tự Động Súng Trường",
+	Default = false,
+	Callback = function(v)
+_G.AutoRifle = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Rifle") then
+if _G.AutoRifle then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Rifle")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoBoltActionRifle", {
+	Text = "Tự Động Súng Trường Kẻ Cướp",
+	Default = false,
+	Callback = function(v)
+_G.AutoBoltActionRifle = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Bolt Action Rifle") then
+if _G.AutoBoltActionRifle then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Bolt Action Rifle")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+Gun:AddCheckbox("AutoElectrocutioner", {
+	Text = "Tự Động Súng Điện",
+	Default = false,
+	Callback = function(v)
+_G.AutoElectrocutioner = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.RuntimeItems:FindFirstChild("Bolt Action Rifle") then
+if _G.AutoElectrocutioner then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Electrocutioner")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
 
 
 
