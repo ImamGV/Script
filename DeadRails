@@ -19,15 +19,15 @@ local Window = Library:CreateWindow({
 	ShowCustomCursor = true,
 })
 local Tabs = {
-  Main = Window:AddTab("Main", "settings"),
-  Visual = Window:AddTab("Visual", "settings"),
-  Players = Window:AddTab("Players", "settings"),
-  Terrain = Window:AddTab("Terrain", "settings"),
-  Settings = Window:AddTab("Settings", "settings")
+  Main = Window:AddTab("Chính", "settings"),
+  Visual = Window:AddTab("Trực giác", "settings"),
+  Players = Window:AddTab("Người Chơi", "settings"),
+  Terrain = Window:AddTab("Xây Dựng", "settings"),
+  Settings = Window:AddTab("Cài Đặt", "settings")
 }
-local Money = Tabs.Main:AddLeftGroupbox("Money")
+local Money = Tabs.Main:AddLeftGroupbox("Tiền")
 Money:AddCheckbox("AutoClaimMoneyBag", {
-	Text = "Auto Claim Money Bag",
+	Text = "Tự Động Lấy Túi Tiền",
 	Default = false,
 	Callback = function(v)
 _G.AutoClaimMoneyBag = v
@@ -39,9 +39,9 @@ end
 end
 end)
 end})
-local DoctorInteract = Tabs.Main:AddRightGroupbox("Doctor Interact")
+local DoctorInteract = Tabs.Main:AddRightGroupbox("Bệnh Viện Tương Tác")
 DoctorInteract:AddCheckbox("AutoClaimBandage", {
-	Text = "Auto Claim Bandage",
+	Text = "Tự Động Lấy Băng",
 	Default = false,
 	Callback = function(v)
 _G.AutoClaimBandage = v
@@ -58,7 +58,7 @@ end
 end)
 end})
 DoctorInteract:AddCheckbox("AutoClaimSnakeOil", {
-	Text = "Auto Claim Snake Oil",
+	Text = "Tự Động Lấy Dầu Rắn",
 	Default = false,
 	Callback = function(v)
 _G.AutoClaimSnakeOil = v
@@ -74,9 +74,9 @@ end
 end
 end)
 end})
-local Proximity = Tabs.Main:AddLeftGroupbox("Proximity")
+local Proximity = Tabs.Main:AddLeftGroupbox("Nhấn")
 Proximity:AddCheckbox("HigherInteract", {
-	Text = "Higher Interact",
+	Text = "Tương Tác Cao Hơn",
 	Default = false,
 	Callback = function(v)
 if v then
@@ -100,7 +100,7 @@ end
 end
 end})
 Proximity:AddCheckbox("InstanceInteract", {
-	Text = "Instance Interact",
+	Text = "Tương Tác Nhanh Chóng",
 	Default = false,
 	Callback = function(v)
 if v then
@@ -142,8 +142,57 @@ end
 end
 end
 end})
+local AutoUse = Tabs.Main:AddRightGroupbox("Tự Động Dùng")
+AutoUse:AddSlider("HealthUseBandage", {
+	Text = "Lượng Máu Dùng Băng",
+	Default = 50,
+	Min = 1,
+	Max = 100,
+	Rounding = 1,
+	Compact = true,
+	Callback = function(v)
+_G.HealthUseBandage = v
+end})
+Proximity:AddCheckbox("UseBandage", {
+	Text = "Giữ Băng Để Dùng",
+	Default = false,
+	Callback = function(v)
+_G.AutoUseBandage = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if game.Players.LocalPlayer.Character:FindFirstChild("Bandage") then
+if _G.AutoUseBandage and game.Players.LocalPlayer.Character.Humanoid.Health < _G.HealthUseBandage then
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bandage").Use:FireServer()
+end
+end
+end)
+end})
+AutoUse:AddSlider("HealthUseSnakeOil", {
+	Text = "Lượng Máu Dùng Dầu Rắn",
+	Default = 50,
+	Min = 1,
+	Max = 100,
+	Rounding = 1,
+	Compact = true,
+	Callback = function(v)
+_G.HealthUseSnakeOil = v
+end})
+Proximity:AddCheckbox("UseSnakeOil", {
+	Text = "Giữ Dầu Rắn Để Dùng",
+	Default = false,
+	Callback = function(v)
+_G.AutoUseSnakeOil = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if game.Players.LocalPlayer.Character:FindFirstChild("Snake Oil") then
+if _G.AutoUseSnakeOil and game.Players.LocalPlayer.Character.Humanoid.Health < _G.HealthUseSnakeOil then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Snake Oil")
+}
 
-
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Snake Oil").Use:FireServer(unpack(args))
+end
+end
+end)
+end})
 
 
 
