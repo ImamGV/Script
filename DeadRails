@@ -39,7 +39,7 @@ end
 end
 end)
 end})
-local DoctorInteract = Tabs.Main:AddRightGroupbox("Bệnh Viện Tương Tác")
+local DoctorInteract = Tabs.Main:AddRightGroupbox("Bệnh Viện")
 DoctorInteract:AddCheckbox("AutoClaimBandage", {
 	Text = "Tự Động Lấy Băng",
 	Default = false,
