@@ -1,1 +1,156 @@
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ForceCheckbox = false
+Library.ShowToggleFrameInKeybinds = true
+
+local Window = Library:CreateWindow({
+	Title = "YOUHUB",
+	Footer = "Dead Rails | v0.0.1",
+	Icon = 95816097006870,
+  Font = Enum.Font.GothamBlack,
+	NotifySide = "Right",
+	ShowCustomCursor = true,
+})
+local Tabs = {
+	Main = Window:AddTab("Main", "home"),
+  Visual = Window:AddTab("Visual", "home"),
+  Players = Window:AddTab("Players", "home"),
+  Terrain = Window:AddTab("Terrain", "home"),
+  Settings = Window:AddTab("Settings", "settings")
+}
+local Money = Tabs.Main:AddLeftGroupbox("Money")
+Money:AddCheckbox("AutoClaimMoneyBag", {
+	Text = "Auto Claim Money Bag",
+	Default = false,
+	Callback = function(v)
+_G.AutoClaimMoneyBag = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoClaimMoneyBag then
+if workspace.RuntimeItems:FindFirstChild("Moneybag") then
+fireproximityprompt(workspace.RuntimeItems.Moneybag.MoneyBag.CollectPrompt)
+end
+end
+end)
+end})
+local DoctorInteract = Tabs.Main:AddRightGroupbox("Doctor Interact")
+DoctorInteract:AddCheckbox("AutoClaimBandage", {
+	Text = "Auto Claim Bandage",
+	Default = false,
+	Callback = function(v)
+_G.AutoClaimBandage = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoClaimBandage then
+if workspace.RuntimeItems:FindFirstChild("Bandage") then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Bandage")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+DoctorInteract:AddCheckbox("AutoClaimSnakeOil", {
+	Text = "Auto Claim Snake Oil",
+	Default = false,
+	Callback = function(v)
+_G.AutoClaimSnakeOil = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoClaimSnakeOil then
+if workspace.RuntimeItems:FindFirstChild("Snake Oil") then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Snake Oil")
+}
+
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end)
+end})
+local Proximity = Tabs.Main:AddLeftGroupbox("Proximity")
+Proximity:AddCheckbox("HigherInteract", {
+	Text = "Higher Interact",
+	Default = false,
+	Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = v.MaxActivationDistance + 5
+end
+end
+IncreasedDistance = workspace.DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = v.MaxActivationDistance + 5
+end
+end)
+else
+IncreasedDistance:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = v.MaxActivationDistance - 5
+end
+end
+end
+end})
+Proximity:AddCheckbox("InstanceInteract", {
+	Text = "Instance Interact",
+	Default = false,
+	Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end
+InstanceInteract = workspace.DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end)
+else
+InstanceInteract:Disconnect()
+end
+end})
+Proximity:AddCheckbox("ThrougherInteract", {
+	Text = "Tương Tác Xuyên",
+	Default = false,
+	Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = false
+end
+end
+ThroughInteract = workspace.DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = false
+end
+end)
+else
+ThroughInteract:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = true
+end
+end
+end
+end})
+
+
+
+
+
+
+
+
+
+
+
+
 
