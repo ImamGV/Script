@@ -12,16 +12,17 @@ Library.ShowToggleFrameInKeybinds = true
 local Window = Library:CreateWindow({
 	Title = "YOUHUB",
 	Footer = "Dead Rails | v0.0.1",
-	Icon = 95816097006870,
-  Font = Enum.Font.GothamBlack,
+	Icon = 110208266151027,
+        Font = Enum.Font.GothamBlack,
 	NotifySide = "Right",
+        CornerRadius = 10,
 	ShowCustomCursor = true,
 })
 local Tabs = {
-	Main = Window:AddTab("Main", "home"),
-  Visual = Window:AddTab("Visual", "home"),
-  Players = Window:AddTab("Players", "home"),
-  Terrain = Window:AddTab("Terrain", "home"),
+  Main = Window:AddTab("Main", "settings"),
+  Visual = Window:AddTab("Visual", "settings"),
+  Players = Window:AddTab("Players", "settings"),
+  Terrain = Window:AddTab("Terrain", "settings"),
   Settings = Window:AddTab("Settings", "settings")
 }
 local Money = Tabs.Main:AddLeftGroupbox("Money")
