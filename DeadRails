@@ -486,8 +486,23 @@ end
 end
 end)
 end})
+local Storage = Tabs.Main:AddRightGroupbox("Lưu trữ")
+Storage:AddCheckbox("AutoStorageCoal", {
+	Text = "Tự Động Lưu Trữ Than",
+	Default = false,
+	Callback = function(v)
+_G.AutoStorageCoal = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoStorageCoal then
+if workspace.RuntimeItems:FindFirstChild("Coal") then
+local args = {
+    [1] = workspace.RuntimeItems:FindFirstChild("Coal")
+}
 
-
-
+game:GetService("ReplicatedStorage").Remotes.StoreItem:FireServer(unpack(args))
+end
+end
+end)
+end})
 
 
