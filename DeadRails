@@ -22,9 +22,9 @@ local Window = Library:CreateWindow({
 })
 local Tabs = {
   Main = Window:AddTab("Chính", "settings"),
-  Visual = Window:AddTab("Trực giác", "settings"),
-  Players = Window:AddTab("Người Chơi", "settings"),
   Terrain = Window:AddTab("Xây Dựng", "settings"),
+  Exploit = Window:AddTab("Gian Lận", "settings"),
+  Players = Window:AddTab("Người Chơi", "settings"),
   Settings = Window:AddTab("Cài Đặt", "settings")
 }
 local Money = Tabs.Main:AddLeftGroupbox("Tiền")
@@ -508,3 +508,48 @@ end)
 end})
 
 
+
+
+
+local Graphics = Tabs.Terrain:AddLeftGroupbox("Độ Hoạ")
+game:GetService("RunService").RenderStepped:Connect(function()
+workspace.Terrain:FindFirstChild("Clouds").Enabled = not _G.Clouds
+end)
+Graphics:AddCheckbox("RemovalCloudMoon", {
+	Text = "Xoá Mây Trăng",
+	Default = false,
+	Callback = function(v)
+_G.Clouds = v
+end})
+local Lighting = Tabs.Terrain:AddRightGroupbox("Ánh Sáng")
+Lighting:AddSlider("Brightness", {
+	Text = "Độ Sáng",
+	Default = 0,
+	Min = 0,
+	Max = 3,
+	Rounding = 1,
+	Compact = true,
+	Callback = function(v)
+_G.Brightness = v
+end})
+Lighting:AddColorPicker("AmbientColor", {
+	Default = Color3.new(1, 1, 1),
+	Title = "Màu Xung Quanh",
+	Transparency = 0,
+	Callback = function(v)
+_G.AmbientColor = v
+end})
+Lighting:AddDivider()
+Lighting:AddCheckbox("Fullbright", {
+	Text = "Phát Sáng Môi Trường",
+	Default = false,
+	Callback = function(v)
+_G.Fullbright = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.Fullbright then
+game.Lighting.Brightness = _G.Brightness or 0
+game.Lighting.GlobalShadows = false
+game.Lighting.OutdoorAmbient = _G.AmbientColor or Color3.new(1,1,1)
+end
+end)
+end})
