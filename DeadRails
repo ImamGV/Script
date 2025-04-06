@@ -532,7 +532,7 @@ Lighting:AddSlider("Brightness", {
 	Callback = function(v)
 _G.Brightness = v
 end})
-Lighting:AddColorPicker("AmbientColor", {
+Lighting:AddLabel("Màu Xung Quanh"):AddColorPicker("AmbientColor", {
 	Default = Color3.new(1, 1, 1),
 	Title = "Màu Xung Quanh",
 	Transparency = 0,
