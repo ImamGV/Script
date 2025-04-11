@@ -57,25 +57,45 @@ end
 end)
 local Players = Window:NewSection("NGƯỜI CHƠI - 👤")
 Players:CreateToggle("ĐI XUYÊN TƯỜNG", function(v)
-if v then
-      noclipConnection = game:GetService("RunService").Stepped:Connect(function()
-         local player = game.Players.LocalPlayer
-            if player and player.Character then
-                for _, part in pairs(player.Character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = false
-                    end
-                end
-            end
-        end)
-    else
-        if noclipConnection then
-            noclipConnection:Disconnect()
-            noclipConnection = nil
-        end
-    end
+_G.Noclip = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.Noclip then
+if game.Players.LocalPlayer and game.Players.LocalPlayer.Character then
+for _, part in ipairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
+end
+end
+end)
 end)
 Players:CreateToggle("MENU KHOÁ ĐỐI THỦ", function(v)
+if v then
+loadstring(game:HttpGet("https://github.com/RGV-devid/DeadRails/blob/main/NPC_Lock?raw=true"))()
+else
+for _,v in pairs(game.CoreGui:GetDescendants()) do
+if v.Name == "NPC_Lock" then
+v:Destroy()
+end
+end
+end
+end)
+Players:CreateToggle("PHÁT QUANG MÔI TRƯỜNG", function(v)
+_G.Fullbright = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.Fullbright then
+game.Lighting.Brightness = 0
+game.Lighting.GlobalShadows = false
+game.Lighting.OutdoorAmbient = Color3.new(1,1,1)
+end
+end)
+end)
+game:GetService("RunService").RenderStepped:Connect(function()
+workspace.Terrain:FindFirstChild("Clouds").Enabled = not _G.Cloud
+end)
+Players:CreateToggle("XOÁ TRĂNG ĐÊM", function(v)
+_G.Cloud = v
 end)
 local End = Window:NewSection("KHÚC CUỐI - 🎭")
 game:GetService("RunService").RenderStepped:Connect(function()
