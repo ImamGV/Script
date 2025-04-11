@@ -449,6 +449,7 @@ while _G.TeleportToBridge do
 if game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-424.53070068359375, 24.95842933654785, -49039.70703125) - Vector3.new(0,0.5,0)
 end
+task.wait()
 end
 end)
 wait(10)
