@@ -8,6 +8,7 @@ function Tween(Pos)
     pcall(function() tween = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(Distance/14, Enum.EasingStyle.Linear),{CFrame = Pos}) end)
     tween:Play()
 end
+_G.Noclip = true
 Tween(CFrame.new(141.49522399902344, 3.9212374687194824, 29925.15234375))
 wait(12)
 if workspace.RuntimeItems:FindFirstChild("GoldBar") then
@@ -15,7 +16,7 @@ local args = {[1] = workspace.RuntimeItems.GoldBar}
 game:GetService("ReplicatedStorage").Shared.Remotes.RequestStartDrag:FireServer(unpack(args))
 workspace.RuntimeItems:FindFirstChild("GoldBar"):FindFirstChildWhichIsA("BasePart").CFrame = CFrame.new(150.62503051757812, 5.7942633628845215, 29918.25) - Vector3.new(0,3, 0)
 end
-wait(2)
+wait(0.3)
 if workspace.RuntimeItems:FindFirstChild("Moneybag") then
 fireproximityprompt(workspace.RuntimeItems.Moneybag.MoneyBag.CollectPrompt)
 end
@@ -49,6 +50,7 @@ local args = {[1] = workspace.RuntimeItems.RevolverAmmo}
 game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
 end
 wait(0.3)
+_G.Noclip = v
 if workspace.RuntimeItems:FindFirstChild("Revolver") then
 local args = {[1] = workspace.RuntimeItems.Revolver}
 game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
@@ -70,6 +72,16 @@ end
 end
 end)
 end)
+Players:CreateToggle("GÓC NHÌN THỨ BA", function(v)
+_G.ThirdPerson = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ThirdPerson then
+game.Players.LocalPlayer.Character.CameraMode = "Classic"
+else
+game.Players.LocalPlayer.Character.CameraMode = "LockFirstPerson"
+end
+end)
+end)
 Players:CreateToggle("MENU KHOÁ ĐỐI THỦ", function(v)
 if v then
 loadstring(game:HttpGet("https://github.com/RGV-devid/DeadRails/blob/main/NPC_Lock?raw=true"))()
@@ -88,6 +100,10 @@ if _G.Fullbright then
 game.Lighting.Brightness = 0
 game.Lighting.GlobalShadows = false
 game.Lighting.OutdoorAmbient = Color3.new(1,1,1)
+else
+game.Lighting.Brightness = 1.5
+game.Lighting.GlobalShadows = true
+game.Lighting.OutdoorAmbient = Color3.new()
 end
 end)
 end)
