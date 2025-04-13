@@ -1,0 +1,409 @@
+
+
+
+
+
+
+
+print("Anti AFK")
+local GC = getconnections or get_signal_cons
+if GC then
+for i,v in pairs(GC(game.Players.LocalPlayer.Idled)) do
+if v["Disable"] then
+v["Disable"](v)
+elseif v["Disconnect"] then
+v["Disconnect"](v)
+end
+end
+else
+game.Players.LocalPlayer.Idled:Connect(function()
+local VirtualUser = game:GetService("VirtualUser")
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+end)
+end
+local Library = loadstring(game:HttpGet("https://github.com/newredz/RedzLibV5/blob/main/Source.lua?raw=true"))()
+
+local LibraryESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/RGV-devid/Scripts/refs/heads/main/ESP"))()
+
+local Window = Library:MakeWindow({"YOUHUB | [ 🍀ST.PATRICK ] Evade | User : " .. game.Players.LocalPlayer.DisplayName, "Version 1.2", "testando-redzLibv5.json"})
+Window:AddMinimizeButton({
+Button = { Image = "rbxassetid://95869322194132", BackgroundColor3 = Color3.fromRGB(0,0,0), BackgroundTransparency = 0 },
+Corner = { CornerRadius = UDim.new(0, 5) }
+})
+local Tabs = {
+Main = Window:MakeTab({"Main", "Home"}),
+Visual = Window:MakeTab({"Visual", "Camera"})
+}
+Tabs.Main:AddSection({"Farm"})
+_G.DistanceUpper = 1000
+Tabs.Main:AddDropdown({
+        Name = "Distance Upper",
+        Options = {"1000", "1500", "2000"},
+        MultiSelect = false,
+        Default = {"1000"},
+	Callback = function(value)
+_G.DistanceUpper = value			
+end})
+Tabs.Main:AddToggle({
+	Name = "AFK Farm",
+	Description = "Teleport Far to AFK",
+	Callback = function(value)
+_G.AFK = value
+if value then
+local part = Instance.new("Part", workspace)
+   part.Anchored = true
+   part.CFrame = CFrame.new(100, 996, 100)
+   part.Material = "Plastic"
+   part.Transparency = 1
+   part.Size = Vector3.new(10000,1,10000)
+local part2 = Instance.new("Part", workspace)
+   part2.Anchored = true
+   part2.CFrame = CFrame.new(100, 1496, 100)
+   part2.Material = "Neon"
+   part2.Transparency = 1
+   part2.Size = Vector3.new(10000,1,10000)
+local part3 = Instance.new("Part", workspace)
+   part3.Anchored = true
+   part3.CFrame = CFrame.new(100, 1996, 100)
+   part3.Material = "Neon"
+   part3.Transparency = 1
+   part3.Size = Vector3.new(10000,1,10000)
+end
+while _G.AFK do wait(0.3)
+local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart", 3)
+hrp.CFrame = CFrame.new(100, _G.DistanceUpper, 100)
+end
+end})
+Tabs.Main:AddToggle({
+	Name = "Auto Tickets Farm [BETA]",
+	Description = "Auto Claim Tickets",
+	Callback = function(value)
+_G.AutoTickets = value
+while task.wait(0.1) and _G.AutoTickets do
+if not value then
+break
+end
+local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+local tickets = workspace.Game.Effects.Tickets
+local hrp = char:WaitForChild("HumanoidRootPart", 3)
+if hrp == nil then
+return
+end
+for i, v in next, tickets:GetDescendants() do
+if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
+hrp.CFrame = CFrame.new(v.Position)
+end
+end
+end
+end})
+Tabs.Main:AddButton({
+        Name = "Random Teleport Map",
+        Description = "Random Teleport map in gameplay",
+        Callback = function()
+game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(0, -10000, 0)
+end})
+Tabs.Main:AddSection({"Players"})
+Tabs.Main:AddSlider({
+  Name = "Speed Boost",
+  Description = "Select a Speed Boost",
+  Min = 0,
+  Max = 5,
+  Increase = 2,
+  Default = 0,
+  Callback = function(value)
+_G.SetSpeedBoost = value
+end})
+Tabs.Main:AddToggle({
+	Name = "Speed Boost",
+	Description = "Enabled Speed Boost",
+	Callback = function(value)
+_G.SpeedBoost = value
+game:GetService("RunService").RenderSteppeed:Connect(function()
+if _G.SpeedBoost then
+local playerHumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+local playerHumanoid = game.Players.LocalPlayer.Character.Humanoid
+playerHumanoidRootPart.CFrame += (playerHumanoid.MoveDirection * _G.SetSpeedBoost)
+playerHumanoidRootPart.CanCollide = true
+end
+end)
+end})
+_G.SetSpeedFly = 50
+Tabs.Main:AddSlider({
+  Name = "Fly speed",
+  Description = "Select a Speed Fly",
+  Min = 50,
+  Max = 300,
+  Increase = 1,
+  Default = 1,
+  Callback = function(value)
+_G.SetSpeedFly = value
+end})
+Tabs.Main:AddToggle({
+	Name = "Fly",
+	Description = "Fly",
+	Callback = function(value)
+_G.StartFly = value
+if _G.StartFly == false then
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler:Destroy()
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler:Destroy()
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
+end
+end
+while _G.StartFly do
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.MaxForce = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.MaxTorque = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.CFrame = Workspace.CurrentCamera.CoordinateFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = Vector3.new()
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.SetSpeedFly)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.SetSpeedFly)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.SetSpeedFly)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.SetSpeedFly)
+end
+elseif game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") == nil and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") == nil then
+local bv = Instance.new("BodyVelocity")
+local bg = Instance.new("BodyGyro")
+
+bv.Name = "VelocityHandler"
+bv.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bv.MaxForce = Vector3.new(0,0,0)
+bv.Velocity = Vector3.new(0,0,0)
+
+bg.Name = "GyroHandler"
+bg.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bg.MaxTorque = Vector3.new(0,0,0)
+bg.P = 1000
+bg.D = 50
+end
+task.wait()
+end
+end})
+Tabs.Main:AddToggle({
+	Name = "Walk on downed",
+	Description = "Walk on down",
+        Callback = function(value)
+_G.WalkDown = value
+spawn(function()
+pcall(function()
+while _G.WalkDown do wait(1)
+if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed') then
+workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):SetAttribute('Downed', false)
+end
+end
+end)
+end)
+end})
+Tabs.Main:AddToggle({
+	Name = "Auto Respawn",
+	Description = "Auto Respawn",
+        Callback = function(value)
+_G.AutoRespawn = value
+while _G.AutoRespawn do wait(0.5)
+if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed') then
+game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
+end
+end
+end})
+Tabs.Main:AddButton({
+        Name = "Respawn",
+        Description = "Respawn",
+        Callback = function()
+game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
+end})
+
+Tabs.Main:AddSection({"Auto"})
+Tabs.Main:AddToggle({
+	Name = "Auto Whistle",
+	Description = "Whistle Auto",
+	Callback = function(value)
+_G.AutoWhistle = value
+while _G.AutoWhistle do wait(1)
+game:GetService("ReplicatedStorage").Events.Character.Whistle:FireServer(true)
+end
+end})
+Tabs.Main:AddSection({"Other"})
+Tabs.Main:AddToggle({
+	Name = "AFK Screen",
+	Callback = function(value)
+if value then
+local ScreenGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Name = "AFKScreen"
+local ImageLabel = Instance.new("TextLabel", ScreenGui)
+ImageLabel.Position = UDim2.new(0,0,0,0)
+ImageLabel.BackgroundColor3 = Color3.fromRGB(90,0,255)
+ImageLabel.BackgroundTransparency = 0.5
+ImageLabel.Size = UDim2.new(1,0,1,0)
+ImageLabel.Text = "YOUHUB\nAFK Screen\nPlaytime:" .. workspace.DistributedGameTime
+ImageLabel.TextSize = "50"
+ImageLabel.Font = "Bodoni"
+ImageLabel.TextColor3 = Color3.new(1,1,1)
+game:GetService("RunService").RenderStepped:Connect(function()
+ImageLabel.Text = string.format("%s%1.f", "YOUHUB\nAFK Screen\nPlaytime:",workspace.DistributedGameTime)
+end)
+else
+for _,v in pairs(game.Players:GetDescendants()) do
+if v.Name == "AFKScreen" then
+v:Destroy()
+end
+end
+end
+end})
+Tabs.Main:AddToggle({
+	Name = "Round Timer UI",
+	Callback = function(value)
+if value then
+local ScreenGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+ScreenGui.Name = "RoundTimerScreen"
+ScreenGui.ResetOnSpawn = false
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Position = UDim2.new(0.425,0,0.1,0)
+Frame.BackgroundColor3 = Color3.new(0,0,0)
+Frame.BackgroundTransparency = 0.75
+Frame.Size = UDim2.new(0.15,0,0.1,0)
+local ImageLabel = Instance.new("TextLabel", Frame)
+ImageLabel.Position = UDim2.new(0.5,0,0.4,0)
+ImageLabel.BackgroundColor3 = Color3.new(0,0,0)
+ImageLabel.BackgroundTransparency = 0.75
+ImageLabel.Size = UDim2.new(0,0,0,0)
+ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
+ImageLabel.TextSize = "14"
+ImageLabel.Font = "Roboto"
+ImageLabel.TextColor3 = Color3.new(1,1,1)
+local UiCorner = Instance.new("UICorner", Frame)
+local UiStroke = Instance.new("UIStroke", Frame)
+UiStroke.Color = Color3.fromRGB(14,174,255)
+UiStroke.Thickness = 2
+game:GetService("RunService").RenderStepped:Connect(function()
+ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
+end)
+else
+for _,v in pairs(game.Players:GetDescendants()) do
+if v.Name == "RoundTimerScreen" then
+v:Destroy()
+end
+end
+end
+end})
+Tabs.Main:AddToggle({
+	Name = "Hide All Ui",
+	Callback = function(value)
+_G.HideAllUI = value
+while _G.HideAllUI do wait(1)
+if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Shared") then
+game:GetService("Players").LocalPlayer.PlayerGui.Shared.Enabled = not _G.HideAllUI
+end
+if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu") then
+game:GetService("Players").LocalPlayer.PlayerGui.Menu.Enabled = not _G.HideAllUI
+end
+end
+end})
+
+Tabs.Visual:AddSection({"ESP"})
+Tabs.Visual:AddToggle({
+	Name = "AI ESP",
+	Description = "AI ESP",
+	Callback = function(value)
+if value then
+for i, v in pairs(workspace.Game.Players:GetChildren()) do
+if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
+LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+end
+end
+NextbotsESP = workspace.Game.Players.ChildAdded:Connect(function(v)
+if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
+LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+end
+end)
+else
+NextbotsESP:Disconnect()
+LibraryESP:Delete("Nextbots_ESP")
+end
+end})
+Tabs.Visual:AddSection({"Settings"})
+Tabs.Visual:AddToggle({
+	Name = "Text ESP",
+	Description = "Now, ESP will have 'Text'",
+	Callback = function(value)
+getgenv().TextESP = value
+end})
+Tabs.Visual:AddToggle({
+	Name = "Distance ESP",
+	Description = "Now, ESP will have 'Distance'",
+	Callback = function(value)
+getgenv().DistanceESP = value
+end})
+Tabs.Visual:AddToggle({
+	Name = "Rainbow ESP",
+	Description = "Now, ESP will 'Rainbow'",
+	Callback = function(value)
+getgenv().RainbowESP = value
+end})
+Tabs.Visual:AddSection({"Server"})
+Tabs.Visual:AddButton({
+        Name = "Rejoin",
+        Callback = function()
+local ts = game:GetService("TeleportService")
+local p = game:GetService("Players").LocalPlayer
+ts:Teleport(game.PlaceId, p)
+end})
+Tabs.Visual:AddButton({
+        Name = "Small",
+        Callback = function()
+local Http = game:GetService("HttpService")
+local TPS = game:GetService("TeleportService")
+local Api = "https://games.roblox.com/v1/games/"
+
+local _place = game.PlaceId
+local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=99.5"
+function ListServers(cursor)
+   local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+   return Http:JSONDecode(Raw)
+end
+
+local Server, Next; repeat
+   local Servers = ListServers(Next)
+   Server = Servers.data[1]
+   Next = Servers.nextPageCursor
+until Server
+
+TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+end})
+Tabs.Visual:AddButton({
+        Name = "Hop",
+        Callback = function()
+local Player = game.Players.LocalPlayer    
+local Http = game:GetService("HttpService")
+local TPS = game:GetService("TeleportService")
+local Api = "https://games.roblox.com/v1/games/"
+
+local _place,_id = game.PlaceId, game.JobId
+-- Asc for lowest player count, Desc for highest player count
+local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=10"
+function ListServers(cursor)
+   local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+   return Http:JSONDecode(Raw)
+end
+
+time_to_wait = 120 --seconds
+
+-- choose a random server and join every 2 minutes
+while wait(time_to_wait) do
+   --freeze player before teleporting to prevent synapse crash?
+   Player.Character.HumanoidRootPart.Anchored = true
+   local Servers = ListServers()
+   local Server = Servers.data[math.random(1,#Servers.data)]
+   TPS:TeleportToPlaceInstance(_place, Server.id, Player)
+end
+end})
