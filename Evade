@@ -117,28 +117,27 @@ Tabs.Main:AddButton({
         Callback = function()
 game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(0, -10000, 0)
 end})
+_G.SetSpeedBoost = 1
 Tabs.Main:AddSection({"Players"})
 Tabs.Main:AddSlider({
   Name = "Speed Boost",
   Description = "Select a Speed Boost",
   Min = 0,
   Max = 5,
-  Increase = 2,
-  Default = 0,
-  Callback = function(value)
-_G.SetSpeedBoost = value
+  Increase = 0.1,
+  Default = 1,
+  Callback = function(v)
+_G.SetSpeedBoost = v
 end})
 Tabs.Main:AddToggle({
 	Name = "Speed Boost",
 	Description = "Enabled Speed Boost",
-	Callback = function(value)
-_G.SpeedBoost = value
+	Callback = function(v)
+_G.SpeedBoost = v
 game:GetService("RunService").RenderSteppeed:Connect(function()
 if _G.SpeedBoost then
-local playerHumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
-local playerHumanoid = game.Players.LocalPlayer.Character.Humanoid
-playerHumanoidRootPart.CFrame += (playerHumanoid.MoveDirection * _G.SetSpeedBoost)
-playerHumanoidRootPart.CanCollide = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SetSpeedBoost)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
 end
 end)
 end})
