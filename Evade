@@ -129,7 +129,7 @@ Tabs.Main:AddSlider({
   Callback = function(v)
 _G.SpeedBoostValue = v
 end})
-game:GetService("RunService").RenderSteppeed:Connect(function()
+game:GetService("RunService").RenderStepped:Connect(function()
 if _G.SpeedBoost then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SpeedBoostValue)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
