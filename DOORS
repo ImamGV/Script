@@ -74,7 +74,7 @@ if _G.FastDoors then game.workspace.CurrentRooms[tostring(game:GetService("Repli
 end 
 end)
 end)
-Fast:AddToggle("DoorsFast",{
+Fast:AddCheckbox("DoorsFast",{
 Text = "Doors Fast",
 Default = false,
 Callback = function(v)
@@ -87,13 +87,13 @@ if _G.DoorsReach then game.workspace.CurrentRooms[tostring(game:GetService("Repl
 end 
 end)
 end)
-Reach:AddToggle("DoorsReach",{
+Reach:AddCheckbox("DoorsReach",{
 Text = "Doors Reach",
 Default = false,
 Callback = function(v)
 _G.DoorsReach = v
 end})
-Reach:AddToggle("Reach",{
+Reach:AddCheckbox("Reach",{
 Text = "Reach",
 Default = false,
 Callback = function(v)
@@ -118,7 +118,7 @@ end
 end
 end})
 local Interact = Tabs.Main:AddLeftGroupbox("Interact")
-Interact:AddToggle("ThroughInteract",{
+Interact:AddCheckbox("ThroughInteract",{
 Text = "Through Interact",
 Default = false,
 Callback = function(v)
@@ -142,7 +142,7 @@ end
 end
 end
 end})
-Interact:AddToggle("InstanceInteract",{
+Interact:AddCheckbox("InstanceInteract",{
 Text = "Instance Interact",
 Default = false,
 Callback = function(v)
@@ -161,194 +161,9 @@ else
 InstanceInteract:Disconnect()
 end
 end})
-shared = {
-    Character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait(),
-    LocalPlayer = game.Players.LocalPlayer,
-    Humanoid = nil,
-}
 
-local function InitializeScript()
-    shared.Humanoid = shared.Character:WaitForChild("Humanoid")
-    game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-        shared.Character = char
-        shared.Humanoid = char:WaitForChild("Humanoid")
-    end)
-end
-
-shared.fireproximityprompt = function(prompt)
-    if prompt.ClassName == "ProximityPrompt" then
-        fireproximityprompt(prompt)
-    end
-end
-
-local Script = {
-    PromptTable = {
-        GamePrompts = {},
-        Aura = {
-            ["ActivateEventPrompt"] = false,
-            ["AwesomePrompt"] = true,
-            ["FusesPrompt"] = true,
-            ["HerbPrompt"] = false,
-            ["LeverPrompt"] = true,
-            ["LootPrompt"] = false,
-            ["ModulePrompt"] = true,
-            ["SkullPrompt"] = false,
-            ["UnlockPrompt"] = true,
-            ["ValvePrompt"] = false,
-            ["PropPrompt"] = true
-        },
-        AuraObjects = {
-            "Lock",
-            "Button"
-        },
-        Clip = {
-            "AwesomePrompt",
-            "FusesPrompt",
-            "HerbPrompt",
-            "HidePrompt",
-            "LeverPrompt",
-            "LootPrompt",
-            "ModulePrompt",
-            "Prompt",
-            "PushPrompt",
-            "SkullPrompt",
-            "UnlockPrompt",
-            "ValvePrompt"
-        },
-        ClipObjects = {
-            "LeverForGate",
-            "LiveBreakerPolePickup",
-            "LiveHintBook",
-            "Button",
-        },
-        Excluded = {
-            Prompt = {
-                "HintPrompt",
-                "InteractPrompt"
-            },
-            Parent = {
-                "KeyObtainFake",
-                "Padlock"
-            },
-            ModelAncestor = {
-                "DoorFake"
-            }
-        }
-    },
-    Temp = {
-        PaintingDebounce = {}
-    }
-}
-
-Script.Functions = {
-    GetAllPromptsWithCondition = function(condition)
-        local prompts = {}
-        for _, v in pairs(game:GetService("Workspace"):GetDescendants()) do
-            if v:IsA("ProximityPrompt") then
-                if condition(v) then
-                    table.insert(prompts, v)
-                end
-            end
-        end
-        return prompts
-    end,
-
-    DistanceFromCharacter = function(object)
-        if not shared.Character or not shared.Character:FindFirstChild("HumanoidRootPart") or not object then
-            return math.huge
-        end
-        local objectPosition = object:IsA("BasePart") and object.Position or 
-                             object:FindFirstChild("HumanoidRootPart") and object.HumanoidRootPart.Position or
-                             object:FindFirstChildWhichIsA("BasePart") and object:FindFirstChildWhichIsA("BasePart").Position
-        if not objectPosition then
-            return math.huge
-        end
-        return (shared.Character.HumanoidRootPart.Position - objectPosition).Magnitude
-    end,
-    
-    IsExcluded = function(prompt)
-        for _, excludedName in ipairs(Script.PromptTable.Excluded.Prompt) do
-            if prompt.Name == excludedName then return true end
-        end
-        if prompt.Parent then
-            for _, excludedParent in ipairs(Script.PromptTable.Excluded.Parent) do
-                if prompt.Parent.Name == excludedParent then return true end
-            end
-        end
-        local model = prompt:FindFirstAncestorWhichIsA("Model")
-        if model then
-            for _, excludedModel in ipairs(Script.PromptTable.Excluded.ModelAncestor) do
-                if model.Name == excludedModel then return true end
-            end
-        end
-        return false
-    end
-}
-
-local AutoInteractEnabled = false
-local IgnoreSettings = {
-    ["Jeff Items"] = true,
-    ["Unlock Lockpick"] = false,
-    ["Paintings"] = false,
-    ["Gold"] = false,
-    ["Light Source Items"] = false,
-    ["Skull Prompt"] = false
-}
-Interact:AddDivider()
-Interact:AddToggle("Auto-interact", {
-	Text = "Auto Interact",
-	Default = false,
-	Callback = function(v)
-        _G.AutoInteractEnabled = v
-end}):AddKeyPicker("AutoInteractKeybind", {
-   Default = "R",
-   Text = "Auto Interact",
-   Mode = Library.IsMobile and "Toggle" or "Hold",
-   SyncToggleState = Library.IsMobile
-})
-
-local function AutoInteractLoop()
-    while true do wait()
-        task.wait()
-        if _G.AutoInteractEnabled then
-            local prompts = Script.Functions.GetAllPromptsWithCondition(function(prompt)
-                if not prompt.Parent then return false end
-                if prompt.Parent:GetAttribute("PropType") == "Battery" and not (shared.Character:FindFirstChildOfClass("Tool") and (shared.Character:FindFirstChildOfClass("Tool"):GetAttribute("RechargeProp") == "Battery" or shared.Character:FindFirstChildOfClass("Tool"):GetAttribute("StorageProp") == "Battery")) then return false end 
-                if prompt.Parent:GetAttribute("PropType") == "Heal" and shared.Humanoid and shared.Humanoid.Health == shared.Humanoid.MaxHealth then return false end
-                if prompt.Parent.Name == "MinesAnchor" then return false end
-                if Script.IsRetro and prompt.Parent.Parent.Name == "RetroWardrobe" then return false end
-                return Script.PromptTable.Aura[prompt.Name] ~= nil
-            end)
-
-            for _, prompt in pairs(prompts) do
-                task.spawn(function()
-                    if Script.Functions.DistanceFromCharacter(prompt.Parent) < 12 and (not prompt:GetAttribute("Interactions" .. shared.LocalPlayer.Name) or Script.PromptTable.Aura[prompt.Name] or table.find(Script.PromptTable.AuraObjects, prompt.Parent.Name)) then
-                        if prompt.Parent.Name == "Slot" and prompt.Parent:GetAttribute("Hint") then
-                            if Script.Temp.PaintingDebounce[prompt] then return end
-                            local currentPainting = shared.Character:FindFirstChild("Prop")
-                            local slotPainting = prompt.Parent:FindFirstChild("Prop")
-                            local currentHint = (currentPainting and currentPainting:GetAttribute("Hint"))
-                            local slotHint = (slotPainting and slotPainting:GetAttribute("Hint"))
-                            local promptHint = prompt.Parent:GetAttribute("Hint")
-                            if slotHint ~= promptHint and (currentHint == promptHint or slotPainting) then
-                                Script.Temp.PaintingDebounce[prompt] = true
-                                shared.fireproximityprompt(prompt)
-                                task.wait(0.3)
-                                Script.Temp.PaintingDebounce[prompt] = false    
-                            end
-                            return
-                        end
-                        shared.fireproximityprompt(prompt)
-                    end
-                end)
-            end
-        end
-    end
-end
-InitializeScript()
-task.spawn(AutoInteractLoop)
 local Automation = Tabs.Main:AddRightGroupbox("Automation")
-Automation:AddToggle("AutoBreaker",{
+Automation:AddCheckbox("AutoBreaker",{
 Text = "Auto Breaker",
 Default = false,
 Callback = function(v)
@@ -435,14 +250,14 @@ if _G.ClosetsExitFix and game.Players.LocalPlayer.Character:GetAttribute("Hiding
 RemotesFolder.CamLock:FireServer()
 end 
 end)
-World:AddToggle("ClosetsExitFix",{
+World:AddCheckbox("ClosetsExitFix",{
 Text = "Closets Exit Fix",
 Default = false,
 Callback = function(v)
 _G.ClosetsExitFix = v
 end})
 if Retro then
-World:AddToggle("BlurFakeBridge",{
+World:AddCheckbox("BlurFakeBridge",{
 Text = "Blur Fake Brigde",
 Default = false,
 Callback = function(v)
@@ -471,7 +286,7 @@ end
 end})
 end
 if not Hotelold or not Fools or not Retro then
-World:AddToggle("HidingLiveSanity",{
+World:AddCheckbox("HidingLiveSanity",{
 Text = "Hiding Live Sanity",
 Default = false,
 Callback = function(v)
@@ -485,7 +300,7 @@ end
 end
 end})
 end
-World:AddToggle("HidingVoidRoblox",{
+World:AddCheckbox("HidingVoidRoblox",{
 Text = "Hiding Void Roblox",
 Default = false,
 Callback = function(v)
@@ -495,7 +310,7 @@ else
 workspace.FallenPartsDestroyHeight = -50000
 end
 end})
-World:AddToggle("HidingJammin",{
+World:AddCheckbox("HidingJammin",{
 Text = "Hiding Jammin",
 Default = false,
 Callback = function(v)
@@ -524,8 +339,7 @@ Text = "Revive",
 DoubleClick = true,
 Func = function()
 RemotesFolder.Revive:FireServer()
-end})
-Misc:AddButton({
+end}):AddButton({
 Text = "Exit",
 DoubleClick = true,
 Func = function()
@@ -536,8 +350,7 @@ Text = "Play Again",
 DoubleClick = true,
 Func = function()
 RemotesFolder.PlayAgain:FireServer()
-end})
-Misc:AddButton({
+end}):AddButton({
 Text = "Reset Character",
 DoubleClick = true,
 Func = function()
@@ -556,7 +369,7 @@ Compact = true,
 Callback = function(v)
 _G.SpeedBoost = v
 end})
-Players:AddToggle("SpeedBoost",{
+Players:AddCheckbox("SpeedBoost",{
 Text = "Speed Boost",
 Default = false,
 Callback = function(v)
@@ -582,7 +395,7 @@ Players:AddSlider("SpeedFly",{
 _G.SetSpeedFly = v
 end})
 _G.SetSpeedFly = 16
-Players:AddToggle("StFly",{
+Players:AddCheckbox("StFly",{
     Text = "Fly",
     Default = false,
     Callback = function(v)
@@ -636,7 +449,7 @@ end}):AddKeyPicker("Fly", {
    Mode = Library.IsMobile and "Toggle",
    SyncToggleState = Library.IsMobile
 })
-Players:AddToggle("SpeedOftion",{
+Players:AddCheckbox("SpeedOftion",{
 Text = "Speed Offtion",
 Default = false,
 Callback = function(v)
@@ -657,14 +470,14 @@ game:GetService("RunService").RenderStepped:Connect(function()
 game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.Crosshair.HitmarkerHead.Visible = _G.StandardMrinade
 game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.Crosshair.Hitmarker.Visible = _G.StandardMrinade
 end)
-Players:AddToggle("StandardMrinade",{
+Players:AddCheckbox("StandardMrinade",{
 Text = "Standard Mrinade",
 Default = false,
 Callback = function(v)
 _G.StandardMrinade = v
 end})
 
-Players:AddToggle("EatCandies",{
+Players:AddCheckbox("EatCandies",{
 Text = "Eat Candies",
 Default = false,
 Callback = function(v)
@@ -679,7 +492,7 @@ end)
 end})
 
 if Fools or Hotelold then
-Players:AddToggle("Godmode",{
+Players:AddCheckbox("Godmode",{
 Text = "Godmode",
 Default = false,
 Callback = function(v)
@@ -704,7 +517,7 @@ end}):AddKeyPicker("Godmode", {
     SyncToggleState = Library.IsMobile,
 })
 end
-Players:AddToggle("NoAccessories",{
+Players:AddCheckbox("NoAccessories",{
 Text = "No Accessories",
 Default = false,
 Callback = function(v)
@@ -728,7 +541,7 @@ game.Players.LocalPlayer.Character.RightUpperLeg.Massless = not _G.NoSlow;
 game.Players.LocalPlayer.Character.UpperTorso.Massless = not _G.NoSlow;
 end)
 end})
-Players:AddToggle("Noclip",{
+Players:AddCheckbox("Noclip",{
 Text = "Noclip",
 Default = false,
 Callback = function(v)
@@ -756,7 +569,7 @@ end}):AddKeyPicker("NC", {
     SyncToggleState = Library.IsMobile,
 })
 if not Hotelold or not Rooms then
-Players:AddToggle("NoFootsteps",{
+Players:AddCheckbox("NoFootsteps",{
 Text = "No Footsteps",
 Default = false,
 Callback = function(v)
@@ -780,7 +593,7 @@ game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
 game.Players.LocalPlayer.Character.Collision.Size = Vector3.new(5,4,4)
 end
 end)
-Players:AddToggle("GodmodeNew",{
+Players:AddCheckbox("GodmodeNew",{
 Text = "Godmode + Noclip",
 Default = false,
 Callback = function(v)
@@ -794,7 +607,7 @@ end}):AddKeyPicker("GodmodeNewKeybind", {
 end
 if not Fools or not Hotelold then
 local LocalPlayer = Tabs.Players:AddRightGroupbox("LocalPlayer")
-LocalPlayer:AddToggle("CanJump",{
+LocalPlayer:AddCheckbox("CanJump",{
 Text = "Can Jump",
 Default = false,
 Callback = function(v)
@@ -808,7 +621,7 @@ end}):AddKeyPicker("CanJump", {
     Mode = Library.IsMobile and "Toggle",
     SyncToggleState = Library.IsMobile,
 })
-LocalPlayer:AddToggle("AutoJump",{
+LocalPlayer:AddCheckbox("AutoJump",{
 Text = "Auto Jump",
 Default = false,
 Callback = function(v)
@@ -819,7 +632,7 @@ game.Players.LocalPlayer.Character.Humanoid.Jump = true
 end
 end)
 end})
-LocalPlayer:AddToggle("CrouchBypass",{
+LocalPlayer:AddCheckbox("CrouchBypass",{
 Text = "Crouch Spoof",
 Default = false,
 Callback = function(v)
@@ -844,7 +657,7 @@ if ClonedCollision:FindFirstChild("CollisionCrouch") then
 ClonedCollision.CollisionCrouch:Destroy()
 end
 task.spawn(function()
-while task.wait(0.23) do
+while task.wait(0.225) do
 if _G.SpeedBypass and not _G.SeekSpeed then
 if ClonedCollision then
 ClonedCollision.Massless = false
@@ -858,15 +671,14 @@ end
 end
 end
 end)
-Bypass:AddToggle("SpeedBypass",{
+Bypass:AddCheckbox("SpeedBypass",{
 Text = "Speed Bypass",
 Default = false,
 Callback = function(v)
 _G.SpeedBypass = v
 end})
 end
-if Mines then
-Bypass:AddToggle("LadderBypass",{
+Bypass:AddCheckbox("LadderBypass",{
 Text = "Ladder Bypass",
 Default = false,
 Callback = function(v)
@@ -893,8 +705,7 @@ end
 end
 end)
 end})
-end
-Bypass:AddToggle("ManipulateBypass",{
+Bypass:AddCheckbox("ManipulateBypass",{
 Text = "Manipulate Bypass",
 Default = false,
 Callback = function(v)
@@ -926,13 +737,13 @@ end
 end 
 end 
 end)
-Anti:AddToggle("Anti-Snare",{
+Anti:AddCheckbox("Anti-Snare",{
 Text = "Anti-Snare",
 Default = false,
 Callback = function(v)
 _G.AntiSnare = v
 end})
-Anti:AddToggle("Anti-Dupe",{
+Anti:AddCheckbox("Anti-Dupe",{
 Text = "Anti-Dupe",
 Default = false,
 Callback = function(v)
@@ -980,7 +791,7 @@ end
 end 
 end 
 end)
-Anti:AddToggle("Anti-Chandelier",{
+Anti:AddCheckbox("Anti-Chandelier",{
 Text = "Anti-Chandelier",
 Default = false,
 Callback = function(v)
@@ -997,7 +808,7 @@ end
 end 
 end 
 end)
-Anti:AddToggle("Anti-SeekArms",{
+Anti:AddCheckbox("Anti-SeekArms",{
 Text = "Anti-Seek Arms",
 Default = false,
 Callback = function(v)
@@ -1034,14 +845,14 @@ end
 end
 end
 end)
-Anti:AddToggle("Anti-Eyes",{
+Anti:AddCheckbox("Anti-Eyes",{
 Text = "Anti-Eyes",
 Default = false,
 Callback = function(v)
 _G.AntiEyes = v
 end})
 if not Hotelold then
-Anti:AddToggle("Anti-Lookman",{
+Anti:AddCheckbox("Anti-Lookman",{
 Text = "Anti-Lookman",
 Default = false,
 Callback = function(v)
@@ -1058,7 +869,7 @@ end
 end
 end)
 end)
-Anti:AddToggle("Anti-Giggle",{
+Anti:AddCheckbox("Anti-Giggle",{
 Text = "Anti-Giggle",
 Default = false,
 Callback = function(v)
@@ -1079,7 +890,7 @@ end
 end
 end)
 end)
-Anti:AddToggle("Anti-GloomPile",{
+Anti:AddCheckbox("Anti-GloomPile",{
 Text = "Anti-Gloom Egg",
 Default = false,
 Callback = function(v)
@@ -1088,7 +899,7 @@ end})
 end
 if Retro then
 Anti:AddDivider()
-Anti:AddToggle("Anti-Lava",{
+Anti:AddCheckbox("Anti-Lava",{
 Text = "Anti-Lava",
 Default = false,
 Callback = function(v)
@@ -1114,7 +925,7 @@ end
 end
 end
 end})
-Anti:AddToggle("AntiSeekWall",{
+Anti:AddCheckbox("AntiSeekWall",{
 Text = "Anti-Seek Wall",
 Default = false,
 Callback = function(v)
@@ -1143,7 +954,7 @@ end})
 end
 if Fools then
 Anti:AddDivider()
-Anti:AddToggle("AntiBanana",{
+Anti:AddCheckbox("AntiBanana",{
 Text = "Anti-Banana",
 Default = false,
 Callback = function(v)
@@ -1171,7 +982,7 @@ end
 
 local Disabled = Tabs.Exploits:AddRightGroupbox("Disabled")
 if not Hotelold then
-Disabled:AddToggle("RemoveA90",{
+Disabled:AddCheckbox("RemoveA90",{
 Text = "Removal-A90",
 Default = false,
 Callback = function(v)
@@ -1189,7 +1000,7 @@ end
 end)
 end})
 end
-Disabled:AddToggle("RemoveFiredamp",{
+Disabled:AddCheckbox("RemoveFiredamp",{
 Text = "Removal-Firedamp",
 Default = false,
 Callback = function(v)
@@ -1202,7 +1013,7 @@ end
 end
 end)
 end})
-Disabled:AddToggle("RemoveScreech",{
+Disabled:AddCheckbox("RemoveScreech",{
 Text = "Removal-Screech",
 Default = false,
 Callback = function(v)
@@ -1219,7 +1030,7 @@ end
 end
 end)
 end})
-Disabled:AddToggle("RemoveHalt",{
+Disabled:AddCheckbox("RemoveHalt",{
 Text = "Removal-Halt",
 Default = false,
 Callback = function(v)
@@ -1229,7 +1040,7 @@ ReplicatedStorage.ClientModules.EntityModules.Shade.Parent = game.Workspace
 end
 end})
 if not Fools or not Hotelold then
-Disabled:AddToggle("RemoveDread",{
+Disabled:AddCheckbox("RemoveDread",{
 Text = "Removal-Dread",
 Default = false,
 Callback = function(v)
@@ -1249,7 +1060,7 @@ end})
 end
 if Retro then
 Disabled:AddDivider()
-Disabled:AddToggle("RemoveDrakoBloxxer",{
+Disabled:AddCheckbox("RemoveDrakoBloxxer",{
 Text = "Removal-DrakoBloxxer",
 Default = false,
 Callback = function(v)
@@ -1273,7 +1084,7 @@ end})
 end
 if Fools then
 Disabled:AddDivider()
-Disabled:AddToggle("RemoveJeff",{
+Disabled:AddCheckbox("RemoveJeff",{
 Text = "Removal-Jeff",
 Default = false,
 Callback = function(v)
@@ -1385,7 +1196,7 @@ end})
 end
 if Hotelold or Fools then
 Disabled:AddDivider()
-Disabled:AddToggle("RemoveSeek",{
+Disabled:AddCheckbox("RemoveSeek",{
 Text = "Removal-Seek Chase",
 Default = false,
 Callback = function(v)
@@ -1400,7 +1211,7 @@ end
 end
 end)
 end})
-Disabled:AddToggle("RemoveGate",{
+Disabled:AddCheckbox("RemoveGate",{
 Text = "Removal-Gate",
 Default = false,
 Callback = function(v)
@@ -1415,7 +1226,7 @@ end
 end
 end)
 end})
-Disabled:AddToggle("RemoveSkeleton",{
+Disabled:AddCheckbox("RemoveSkeleton",{
 Text = "Removal-Skeleton Door",
 Default = false,
 Callback = function(v)
@@ -1430,7 +1241,7 @@ end
 end
 end)
 end})
-Disabled:AddToggle("RemovePuzzle",{
+Disabled:AddCheckbox("RemovePuzzle",{
 Text = "Removal-Puzzle Door",
 Default = false,
 Callback = function(v)
@@ -1448,7 +1259,7 @@ end})
 end
 if not Hotelold then
 Disabled:AddDivider()
-Disabled:AddToggle("RemoveDamageVignette",{
+Disabled:AddCheckbox("RemoveDamageVignette",{
 Text = "Removal Damage Vignette",
 Default = false,
 Callback = function(v)
@@ -1460,7 +1271,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.DamageVignette
 end
 end)
 end})
-Disabled:AddToggle("RemoveBrutalVignette",{
+Disabled:AddCheckbox("RemoveBrutalVignette",{
 Text = "Removal Brutal Vignette",
 Default = false,
 Callback = function(v)
@@ -1472,7 +1283,7 @@ end
 end)
 end})
 
-Disabled:AddToggle("RemoveHideVignette",{
+Disabled:AddCheckbox("RemoveHideVignette",{
 Text = "Removal Hide Vignette",
 Default = false,
 Callback = function(v)
@@ -1483,7 +1294,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.HideVignette.V
 end
 end)
 end})
-Disabled:AddToggle("RemovePumpkinVignette",{
+Disabled:AddCheckbox("RemovePumpkinVignette",{
 Text = "Removal Pumpkin Vignette",
 Default = false,
 Callback = function(v)
@@ -1494,7 +1305,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.PumpkinVignett
 end
 end)
 end})
-Disabled:AddToggle("RemoveSeekVignette",{
+Disabled:AddCheckbox("RemoveSeekVignette",{
 Text = "Removal Seek Vignette",
 Default = false,
 Callback = function(v)
@@ -1505,7 +1316,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.SeekVignette.V
 end
 end)
 end})
-Disabled:AddToggle("RemoveWeirdVignette",{
+Disabled:AddCheckbox("RemoveWeirdVignette",{
 Text = "Removal Weird Vignette",
 Default = false,
 Callback = function(v)
@@ -1516,7 +1327,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.WeirdVignette.
 end
 end)
 end})
-Disabled:AddToggle("RemoveWhiteVignette",{
+Disabled:AddCheckbox("RemoveWhiteVignette",{
 Text = "Removal White Vignette",
 Default = false,
 Callback = function(v)
@@ -1529,7 +1340,7 @@ end)
 end})
 end
 local Glitch = Tabs.Exploits:AddLeftGroupbox("Glitch")
-Glitch:AddToggle("NoGlitchEffect",{
+Glitch:AddCheckbox("NoGlitchEffect",{
 Text = "No Glitch Effect",
 Default = false,
 Callback = function(v)
@@ -1540,7 +1351,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.GlitchEffect.V
 end
 end)
 end})
-Glitch:AddToggle("NoGlitchScreen",{
+Glitch:AddCheckbox("NoGlitchScreen",{
 Text = "No Glitch Screen",
 Default = false,
 Callback = function(v)
@@ -1552,7 +1363,7 @@ end
 end)
 end})
 if not Hotelold then
-Glitch:AddToggle("NoGlitchTrial",{
+Glitch:AddCheckbox("NoGlitchTrial",{
 Text = "No Glitch Trial",
 Default = false,
 Callback = function(v)
@@ -1565,7 +1376,7 @@ end)
 end})
 end
 local Jumpcares = Tabs.Exploits:AddLeftGroupbox("Jumpcares")
-Jumpcares:AddToggle("NoAmbushJumpcares",{
+Jumpcares:AddCheckbox("NoAmbushJumpcares",{
 Text = "No Ambush Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1576,7 +1387,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Ambu
 end
 end)
 end})
-Jumpcares:AddToggle("NoHideJumpcares",{
+Jumpcares:AddCheckbox("NoHideJumpcares",{
 Text = "No Hide Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1587,7 +1398,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Hide
 end
 end)
 end})
-Jumpcares:AddToggle("NoRushJumpcares",{
+Jumpcares:AddCheckbox("NoRushJumpcares",{
 Text = "No Rush Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1598,7 +1409,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Rush
 end
 end)
 end})
-Jumpcares:AddToggle("NoFigureJumpcares",{
+Jumpcares:AddCheckbox("NoFigureJumpcares",{
 Text = "No Figure Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1615,7 +1426,7 @@ end
 end
 end)
 end})
-Jumpcares:AddToggle("NoSpiderJumpcares",{
+Jumpcares:AddCheckbox("NoSpiderJumpcares",{
 Text = "No Spider Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1632,7 +1443,7 @@ end
 end
 end)
 end})
-Jumpcares:AddToggle("NoSeekJumpcares",{
+Jumpcares:AddCheckbox("NoSeekJumpcares",{
 Text = "No Seek Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1643,7 +1454,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Seek
 end
 end)
 end})
-Jumpcares:AddToggle("NoShadeJumpcares",{
+Jumpcares:AddCheckbox("NoShadeJumpcares",{
 Text = "No Halt Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1655,7 +1466,7 @@ end
 end)
 end})
 if Fools then
-Jumpcares:AddToggle("NoGreedJumpcares",{
+Jumpcares:AddCheckbox("NoGreedJumpcares",{
 Text = "No Greed Jumpcares",
 Default = false,
 Callback = function(v)
@@ -1669,7 +1480,7 @@ end})
 end
 local Troll = Tabs.Exploits:AddRightGroupbox("Trolling")
 if not Hotelold then
-Troll:AddToggle("Stunned",{
+Troll:AddCheckbox("Stunned",{
 Text = "Stunned",
 Default = false,
 Callback = function(v)
@@ -1683,7 +1494,7 @@ local lplr = game.Players.LocalPlayer
         end
 end})
 end
-Troll:AddToggle("Thoughts",{
+Troll:AddCheckbox("Thoughts",{
 Text = "Thoughts",
 Default = false,
 Callback = function(v)
@@ -1703,7 +1514,7 @@ local lplr = game.Players.LocalPlayer
             end
         end
 end})
-Troll:AddToggle("UpsideDown",{
+Troll:AddCheckbox("UpsideDown",{
 Text = "Upside Down",
 Default = false,
 Callback = function(v)
@@ -1724,7 +1535,7 @@ if not collision then return end
         end)
     end
 end})
-Troll:AddToggle("LagMove",{
+Troll:AddCheckbox("LagMove",{
 Text = "Lag Move",
 Default = false,
 Callback = function(v)
@@ -1735,7 +1546,7 @@ wait(0.5)
 game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 end
 end})
-Troll:AddToggle("SpamMotorReplication",{
+Troll:AddCheckbox("SpamMotorReplication",{
 Text = "Spam Motor Replication",
 Default = false,
 Callback = function(v)
@@ -1750,7 +1561,7 @@ end})
 
 
 local ESP = Tabs.Visual:AddLeftGroupbox("ESP")
-ESP:AddToggle("DoorESP",{
+ESP:AddCheckbox("DoorESP",{
 Text = "Door ESP",
 Default = false,
 Callback = function(v)
@@ -1780,7 +1591,7 @@ Default = Color3.fromRGB(135, 135, 255),
 Callback = function(v)
 _G.DoorCE = v
 end})
-ESP:AddToggle("KeyESP",{
+ESP:AddCheckbox("KeyESP",{
 Text = "Key ESP",
 Default = false,
 Callback = function(v)
@@ -1818,7 +1629,7 @@ Default = Color3.fromRGB(135, 255, 255),
 Callback = function(v)
 _G.KeyCE = v
 end})
-ESP:AddToggle("LeverESP",{
+ESP:AddCheckbox("LeverESP",{
 Text = "Lever ESP",
 Default = false,
 Callback = function(v)
@@ -1856,7 +1667,7 @@ Default = Color3.fromRGB(0,255),
 Callback = function(v)
 _G.LeverCE = v
 end})
-ESP:AddToggle("GeneratorESP",{
+ESP:AddCheckbox("GeneratorESP",{
 Text = "Generator ESP",
 Default = false,
 Callback = function(v)
@@ -1884,7 +1695,7 @@ Default = Color3.fromRGB(0,255),
 Callback = function(v)
 _G.GeneratorCE = v
 end})
-ESP:AddToggle("FuseESP",{
+ESP:AddCheckbox("FuseESP",{
 Text = "Fuse ESP",
 Default = false,
 Callback = function(v)
@@ -1912,7 +1723,7 @@ Default = Color3.fromRGB(0,255),
 Callback = function(v)
 _G.FuseCE = v
 end})
-ESP:AddToggle("BookESP",{
+ESP:AddCheckbox("BookESP",{
 Text = "Book ESP",
 Default = false,
 Callback = function(v)
@@ -1940,7 +1751,7 @@ Default = Color3.fromRGB(255,0,255),
 Callback = function(v)
 _G.BookCE = v
 end})
-ESP:AddToggle("BreakerESP",{
+ESP:AddCheckbox("BreakerESP",{
 Text = "Breaker ESP",
 Default = false,
 Callback = function(v)
@@ -1968,7 +1779,7 @@ Default = Color3.fromRGB(255,255,255),
 Callback = function(v)
 _G.BreakerCE = v
 end})
-ESP:AddToggle("AnchorESP",{
+ESP:AddCheckbox("AnchorESP",{
 Text = "Anchor ESP",
 Default = false,
 Callback = function(v)
@@ -1996,33 +1807,8 @@ Default = Color3.fromRGB(255,255,255),
 Callback = function(v)
 _G.AnchorCE = v
 end})
-ESP:AddToggle("PlayerESP",{
-Text = "Players ESP",
-Default = false,
-Callback = function(v)
-if v then
-for _,Player in pairs(game:GetService("Players"):GetPlayers()) do
-if Player ~= game:GetService("Players").LocalPlayer then
-ESP:AddESP(Player.Character, Player.DisplayName .. "\n[HP:" .. Player.Character.Humanoid.Health .. "%]", _G.PlayerCE or Color3.new(1,1,1), 14, "PlayerESP")
-end
-end
-PlayerESP = workspace.DescendantAdded:Connect(function(v)
-for _,Player in pairs(game:GetService("Players"):GetPlayers()) do
-if Player ~= game:GetService("Players").LocalPlayer then
-ESP:AddESP(Player.Character, Player.DisplayName .. "\n[HP:" .. Player.Character.Humanoid.Health .. "%]", _G.PlayerCE or Color3.new(1,1,1), 14, "PlayerESP")
-end
-end
-end)
-else
-PlayerESP:Disconnect()
-LibraryESP:Delete("PlayerESP")
-end
-end}):AddColorPicker("PlayerESP",{
-Default = Color3.fromRGB(255,255,255),
-Callback = function(v)
-_G.PlayerCE = v
-end})
-ESP:AddToggle("GoldESP",{
+
+ESP:AddCheckbox("GoldESP",{
 Text = "Gold ESP",
 Default = false,
 Callback = function(v)
@@ -2050,7 +1836,7 @@ Default = Color3.fromRGB(255,255),
 Callback = function(v)
 _G.GoldCE = v
 end})
-ESP:AddToggle("ChestESP",{
+ESP:AddCheckbox("ChestESP",{
 Text = "Chest ESP",
 Default = false,
 Callback = function(v)
@@ -2110,7 +1896,7 @@ Default = Color3.fromRGB(255,135),
 Callback = function(v)
 _G.ChestCE = v
 end})
-ESP:AddToggle("WaterPumpESP",{
+ESP:AddCheckbox("WaterPumpESP",{
 Text = "Waterpump ESP",
 Default = false,
 Callback = function(v)
@@ -2138,7 +1924,7 @@ Default = Color3.fromRGB(0,255,255),
 Callback = function(v)
 _G.PumpCE = v
 end})
-ESP:AddToggle("EntityESP",{
+ESP:AddCheckbox("EntityESP",{
 Text = "Entity ESP",
 Default = false,
 Callback = function(v)
@@ -2296,7 +2082,7 @@ Default = Color3.fromRGB(255),
 Callback = function(v)
 _G.EntityCE = v
 end})
-ESP:AddToggle("ItemsESP",{
+ESP:AddCheckbox("ItemsESP",{
 Text = "Items ESP",
 Default = false,
 Callback = function(v)
@@ -2578,19 +2364,19 @@ _G.ItemsCE = v
 end})
 
 ESP:AddDivider()
-ESP:AddToggle("DistanceESP",{
+ESP:AddCheckbox("DistanceESP",{
 Text = "Distance ESP",
 Default = false,
 Callback = function(v)
 getgenv().DistanceESP = v
 end})
-ESP:AddToggle("RainbowESP",{
+ESP:AddCheckbox("RainbowESP",{
 Text = "Rainbow ESP",
 Default = false,
 Callback = function(v)
 getgenv().RainbowESP = v
 end})
-ESP:AddToggle("TextESP",{
+ESP:AddCheckbox("TextESP",{
 Text = "Text ESP",
 Default = false,
 Callback = function(v)
@@ -2605,7 +2391,7 @@ Notifying:AddDropdown('SelectEntity',{
 	Multi = true
 })
 _G.PlaySoundAlert = 5
-Notifying:AddToggle("EntityNotify",{
+Notifying:AddCheckbox("EntityNotify",{
 Text = "Entity Notify",
 Default = false,
 Callback = function(v)
@@ -2773,7 +2559,7 @@ else
 NotificationEntity:Disconnect()
 end
 end})
-Notifying:AddToggle("OxyNotify",{
+Notifying:AddCheckbox("OxyNotify",{
 Text = "Oxygen Notify",
 Default = false,
 Callback = function(v)
@@ -2788,7 +2574,7 @@ else
 OxygenNotify:Disconnect()
 end
 end})
-Notifying:AddToggle("PlaySound",{
+Notifying:AddCheckbox("PlaySound",{
 Text = "Playing Sound",
 Default = false,
 Callback = function(v)
@@ -2818,20 +2604,20 @@ Compact = true,
 Callback = function(v)
 _G.Brightness = v
 end})
-Lighting:AddToggle("GlobalShadows",{
+Lighting:AddCheckbox("GlobalShadows",{
 Text = "No Shadows",
 Default = false,
 Callback = function(v)
 _G.GlobalShadows = v
 end})
-Lighting:AddToggle("NoFog",{
+Lighting:AddCheckbox("NoFog",{
 Text = "No Fog",
 Default = false,
 Callback = function(v)
 _G.NoFog = v
 end})
 Lighting:AddDivider()
-Lighting:AddToggle("Fullbright",{
+Lighting:AddCheckbox("Fullbright",{
 Text = "Enabled",
 Default = false,
 Callback = function(v)
@@ -2884,7 +2670,7 @@ Compact = true,
 Callback = function(v)
 _G.RangeLightHead = v
 end})
-Ambient:AddToggle("EnabledHeadLight",{
+Ambient:AddCheckbox("EnabledHeadLight",{
 Text = "Enabled",
 Default = false,
 Callback = function(v)
@@ -2909,7 +2695,7 @@ Compact = true,
 Callback = function(v)
 _G.SelectFieldOfView = v
 end})
-Camera:AddToggle("FOV",{
+Camera:AddCheckbox("FOV",{
 Text = "Field Of View",
 Default = false,
 Callback = function(v)
@@ -2922,7 +2708,7 @@ Main_Game.fovtarget = 70
 end
 end)
 end})
-Camera:AddToggle("NoCutscenes",{
+Camera:AddCheckbox("NoCutscenes",{
 Text = "No Cutscenes",
 Default = false,
 Callback = function(v)
@@ -2939,7 +2725,7 @@ end
 end
 end)
 end})
-Camera:AddToggle("NoCamBob",{
+Camera:AddCheckbox("NoCamBob",{
 Text = "No Camera Bob",
 Default = false,
 Callback = function(v)
@@ -2948,7 +2734,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
 Main_Game.spring.Speed = _G.NoCamBob and 9e9 or 8
 end)
 end})
-Camera:AddToggle("NoCamShake",{
+Camera:AddCheckbox("NoCamShake",{
 Text = "No Camera Shake",
 Default = false,
 Callback = function(v)
@@ -2960,7 +2746,7 @@ end
 end)
 end})
 Camera:AddDivider()
-Camera:AddToggle("Viewmodel",{
+Camera:AddCheckbox("Viewmodel",{
 Text = "Viewmodel",
 Default = false,
 Callback = function(v)
@@ -3004,7 +2790,7 @@ Callback = function(v)
 _G.ViewmodelZ = v
 end})
 local FPS = Tabs.Visual:AddLeftGroupbox("FPS")
-FPS:AddToggle("UnbreakerLight",{
+FPS:AddCheckbox("UnbreakerLight",{
 Text = "Unbreaker Light",
 Default = false,
 Callback = function(v)
@@ -3019,7 +2805,7 @@ Module_Events.shatter = ShatterFunction
 end
 end})
 FPS:AddDivider()
-FPS:AddToggle("LowDetail",{
+FPS:AddCheckbox("LowDetail",{
 Text = "Low Detail",
 Default = false,
 Callback = function(v)
@@ -3073,7 +2859,7 @@ workspace.Terrain.WaterWaveSpeed = false and 0 or 8
 end
 end})
 FPS:AddDivider()
-FPS:AddToggle("DeleteBatDecorate",{
+FPS:AddCheckbox("DeleteBatDecorate",{
 Text = "Delete Bat Decorate",
 Default = false,
 Callback = function(v)
@@ -3097,8 +2883,8 @@ end})
 local MenuGroup = Tabs.Settings:AddLeftGroupbox("Menu")
 local CreditsGroup = Tabs.Settings:AddRightGroupbox("Credits")
 
-MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind Menu", Callback = function(v) Library.KeybindFrame.Visible = v end})
-MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(v) Library.ShowCustomCursor = v end})
+MenuGroup:AddCheckbox("KeybindMenuOpen", { Default = false, Text = "Open Keybind Menu", Callback = function(v) Library.KeybindFrame.Visible = v end})
+MenuGroup:AddCheckbox("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(v) Library.ShowCustomCursor = v end})
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("Keybind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
