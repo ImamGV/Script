@@ -1,8 +1,3 @@
--- Vampire Castle variables
-local teleportPosition = Vector3.new(57, 3, -9000)
-local teleportCount = 10
-local delayTime = 0.1
--- Function to start repeated jumping
 local function StartJump()
 game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 end
