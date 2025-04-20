@@ -29,7 +29,6 @@ local function TPTeslaLab()
             else
                 print("Not found chair.")
             end
-        end
     else
         print("...")
     end
