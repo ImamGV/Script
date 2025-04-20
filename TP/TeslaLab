@@ -13,7 +13,7 @@ local function TPTeslaLab()
             for _, chair in ipairs(workspace.RuntimeItems:GetDescendants()) do
                 if chair.Name == "Chair" then
                     local Seat = chair:FindFirstChild("Seat")
-                    if Seatthen
+                    if Seat then
                         FoundChair = Seat
                         break
                     end
