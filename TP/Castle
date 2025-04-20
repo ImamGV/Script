@@ -4,12 +4,7 @@ local teleportCount = 10
 local delayTime = 0.1
 -- Function to start repeated jumping
 local function StartJump()
-    task.spawn(function()
-        while true do
-            task.wait(0.75)
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
-        end
-    end)
+game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 end
 local function TPVampireCastle()
     for i = 1, 10 do
