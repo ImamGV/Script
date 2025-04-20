@@ -1,21 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
-local TweenService = game:GetService("TweenService")
-
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local remote = ReplicatedStorage.Packages.RemotePromise.Remotes.C_ActivateObject
-
--- Bond collection variables
-local maxDistance = 500
-local collectDistance = 10
-local walkDelay = 0.1
-local collectingBonds = true
-
 -- Vampire Castle variables
 local teleportPosition = Vector3.new(57, 3, -9000)
 local teleportCount = 10
@@ -39,7 +21,7 @@ local function TPVampireCastle()
     if VampireCastle and VampireCastle.PrimaryPart then
         for _, item in ipairs(workspace.RuntimeItems:GetDescendants()) do
             if item:IsA("Model") and item.Name == "MaximGun" then
-                if (item.PrimaryPart.Position - vampireCastle.PrimaryPart.Position).Magnitude <= 500 then
+                if (item.PrimaryPart.Position - VampireCastle.PrimaryPart.Position).Magnitude <= 500 then
                     MaximGun = item
                     break
                 end
