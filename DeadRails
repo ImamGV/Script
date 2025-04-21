@@ -437,110 +437,143 @@ end
 end)
 end})
 local CombatWeapons = Tabs.Main:AddLeftGroupbox("Vũ Khí Cận Chiến")
+function GetShovel()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Shovel") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoShovel", {
 	Text = "Tự Động Lấy Xẻng",
 	Default = false,
 	Callback = function(v)
 _G.AutoShovel = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Shovel") then
 if _G.AutoShovel then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Shovel")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetShovel()
 end
 end)
 end})
+function GetPickaxe()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Pickaxe") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoPickaxe", {
 	Text = "Tự Động Lấy Cuốc",
 	Default = false,
 	Callback = function(v)
 _G.AutoPickaxe = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Shovel") then
 if _G.AutoPickaxe then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Pickaxe")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetPickaxe()
 end
 end)
 end})
+function GetTomahawk()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Tomahawk") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoTomahawk", {
-	Text = "Tự Động Lấy Rìu Chiến",
+	Text = "Tự Động Lấy Rìu",
 	Default = false,
 	Callback = function(v)
 _G.AutoTomahawk = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Tomahawk") then
 if _G.AutoTomahawk then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Tomahawk")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetTomahawk
 end
 end)
 end})
+function GetCavalrySword()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Cavalry Sword") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoCavalrySword", {
 	Text = "Tự Động Lấy Kiếm Kỵ Binh",
 	Default = false,
 	Callback = function(v)
 _G.AutoCavalrySwords = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Cavalry Sword") then
 if _G.AutoCavalrySwords then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Cavalry Sword")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetCavalrySword()
 end
 end)
 end})
-
+function GetJadeSword()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Jade Sword") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoJadeSword", {
 	Text = "Tự Động Lấy Kiếm Ngọc Bích",
 	Default = false,
 	Callback = function(v)
 _G.AutoJadeSword = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Jade Sword") then
 if _G.AutoJadeSword then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Jade Sword")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetJadeSword()
 end
 end)
 end})
+function GetVampireKnife()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Vampire Knife") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 CombatWeapons:AddCheckbox("AutoVampireKnife", {
 	Text = "Tự Động Lấy Dao Ma Cà Rồng",
 	Default = false,
 	Callback = function(v)
 _G.AutoVampireKnife = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Vampire Knife") then
 if _G.AutoVampireKnife then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Vampire Knife")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetVampireKnife()
 end
 end)
 end})
 local Storage = Tabs.Main:AddRightGroupbox("Lưu trữ")
+function StoreCoal()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Coal") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.StoreItem:FireServer(unpack(args))
+end
+end
+end
+end
 Storage:AddCheckbox("AutoStorageCoal", {
 	Text = "Tự Động Lưu Trữ Than",
 	Default = false,
@@ -548,17 +581,54 @@ Storage:AddCheckbox("AutoStorageCoal", {
 _G.AutoStorageCoal = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoStorageCoal then
-if workspace.RuntimeItems:FindFirstChild("Coal") then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Coal")
-}
-
-game:GetService("ReplicatedStorage").Remotes.StoreItem:FireServer(unpack(args))
-end
+StoreCoal()
 end
 end)
 end})
-
+function StoreGoldBar()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("GoldBar") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.StoreItem:FireServer(unpack(args))
+end
+end
+end
+end
+Storage:AddCheckbox("AutoStorageGoldBar", {
+	Text = "Tự Động Lưu Trữ Thanh Vàng",
+	Default = false,
+	Callback = function(v)
+_G.AutoStorageGoldBar = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoStorageGoldBar then
+StoreGoldBar()
+end
+end)
+end})
+function StoreDeadOutlaw()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Outlaw") then
+if v.Humanoid.Health < 0 then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.StoreItem:FireServer(unpack(args))
+end
+end
+end
+end
+end
+Storage:AddCheckbox("AutoStorageDeadOutlaw", {
+	Text = "Tự Động Lưu Trữ Kẻ Cướp Chết",
+	Default = false,
+	Callback = function(v)
+_G.AutoStorageDeadOutlaw = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoStorageDeadOutlaw then
+StoreDeadOutlaw()
+end
+end)
+end})
 
 
 
@@ -586,7 +656,7 @@ _G.Brightness = v
 end})
 Lighting:AddLabel("Màu Xung Quanh"):AddColorPicker("AmbientColor", {
 	Default = Color3.new(1, 1, 1),
-	Title = "Màu Xung Quanh",
+	Title = "Màu Vùng Xung Quanh",
 	Transparency = 0,
 	Callback = function(v)
 _G.AmbientColor = v
