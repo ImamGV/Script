@@ -45,7 +45,7 @@ local DoctorInteract = Tabs.Main:AddRightGroupbox("Bệnh Viện")
 function GetBandage()
 for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
 if v:IsA("Model") and v.Name:match("Bandage") do
-if (game.Players.LocalPlayer.Character.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
 local args = {[1] = v}
 game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
 end
