@@ -496,7 +496,7 @@ CombatWeapons:AddCheckbox("AutoTomahawk", {
 _G.AutoTomahawk = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoTomahawk then
-GetTomahawk
+GetTomahawk()
 end
 end)
 end})
