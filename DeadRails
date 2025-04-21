@@ -44,7 +44,7 @@ end})
 local DoctorInteract = Tabs.Main:AddRightGroupbox("Bệnh Viện")
 function GetBandage()
 for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
-if v:IsA("Model") and v.Name:match("Bandage") do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Bandage") then
 if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
 local args = {[1] = v}
 game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
@@ -59,12 +59,20 @@ DoctorInteract:AddCheckbox("AutoClaimBandage", {
 _G.AutoClaimBandage = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoClaimBandage then
-if workspace.RuntimeItems:FindFirstChild("Bandage") then
 GetBandage()
-end
 end
 end)
 end})
+function GetSnakeOil()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Snake Oil") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 DoctorInteract:AddCheckbox("AutoClaimSnakeOil", {
 	Text = "Tự Động Lấy Dầu Rắn",
 	Default = false,
@@ -72,13 +80,7 @@ DoctorInteract:AddCheckbox("AutoClaimSnakeOil", {
 _G.AutoClaimSnakeOil = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoClaimSnakeOil then
-if workspace.RuntimeItems:FindFirstChild("Snake Oil") then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Snake Oil")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetSnakeOil()
 end
 end)
 end})
@@ -202,191 +204,235 @@ end
 end)
 end})
 local GunAmmo = Tabs.Main:AddLeftGroupbox("Đạn Súng")
+function GetRevolverAmmo()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("RevolverAmmo") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end
+end
 GunAmmo:AddCheckbox("AutoRevolverAmmo", {
 	Text = "Tự Động Lấy Đạn Súng Lục",
 	Default = false,
 	Callback = function(v)
 _G.AutoRevolverShells = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("RevolverAmmo") then
 if _G.AutoRevolverShells then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("RevolverAmmo")
-}
-
-game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
-end
+GetRevolverAmmo()
 end
 end)
 end})
+function GetShotgunAmmo()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("ShotgunShells") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end
+end
 GunAmmo:AddCheckbox("AutoShotgunAmmo", {
 	Text = "Tự Động Lấy Đạn Súng Ngắn",
 	Default = false,
 	Callback = function(v)
 _G.AutoShotgunShells = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("ShotgunShells") then
 if _G.AutoShotgunShells then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("ShotgunShells")
-}
-
-game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
-end
+GetShotgunAmmo()
 end
 end)
 end})
+function GetRifleAmmo()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("RifleAmmo") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
+end
+end
+end
+end
 GunAmmo:AddCheckbox("AutoRefleAmmo", {
 	Text = "Tự Động Lấy Đạn Súng Trường",
 	Default = false,
 	Callback = function(v)
 _G.AutoRifleShells = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("RifleAmmo") then
 if _G.AutoRifleShells then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("RifleAmmo")
-}
-
-game:GetService("ReplicatedStorage").Packages.RemotePromise.Remotes.C_ActivateObject:FireServer(unpack(args))
-end
+GetRifleAmmo()
 end
 end)
 end})
 local Gun = Tabs.Main:AddRightGroupbox("Súng")
+function GetRevolver()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Revolver") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoRevolver", {
 	Text = "Tự Động Súng Lục",
 	Default = false,
 	Callback = function(v)
 _G.AutoRevolver = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Revolver") then
 if _G.AutoRevolver then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Revolver")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetRevolver()
 end
 end)
 end})
+function GetNavyRevolver()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Navy Revolver") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoNavyRevolver", {
 	Text = "Tự Động Súng Lục Hải Quân",
 	Default = false,
 	Callback = function(v)
 _G.AutoNavyRevolver = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Navy Revolver") then
 if _G.AutoNavyRevolver then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Navy Revolver")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetNavyRevolver()
 end
 end)
 end})
+function GetMauser()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Mauser") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoMauser", {
 	Text = "Tự Động Ma Súc",
 	Default = false,
 	Callback = function(v)
 _G.AutoMauserC96 = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Mauser") then
 if _G.AutoMauserC96 then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Mauser")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetMauser()
 end
 end)
 end})
+function GetShotgun()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Navy Revolver") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoShotgun", {
 	Text = "Tự Động Súng Ngắn",
 	Default = false,
 	Callback = function(v)
 _G.AutoShotgun = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Shotgun") then
 if _G.AutoShotgun then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Shotgun")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetShotgun()
 end
 end)
 end})
+function GetSawedOffShotgun()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Sawed-Off Shotgun") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoSawedOffShotgun", {
-	Text = "Tự Động Súng Ngắn Cưa Nòng",
+	Text = "Tự Động Súng Ngắn Tia Cưa",
 	Default = false,
 	Callback = function(v)
 _G.AutoSawedOffShotgun = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Sawed-Off Shotgun") then
 if _G.AutoSawedOffShotgun then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Sawed-Off Shotgun")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetSawedOffShotgun()
 end
 end)
 end})
+function GetRifle()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Rifle") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoRifle", {
 	Text = "Tự Động Súng Trường",
 	Default = false,
 	Callback = function(v)
 _G.AutoRifle = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Rifle") then
 if _G.AutoRifle then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Rifle")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetRifle()
 end
 end)
 end})
+function GetBoltActionRifle()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Bolt Action Rifle") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoBoltActionRifle", {
 	Text = "Tự Động Súng Trường Kẻ Cướp",
 	Default = false,
 	Callback = function(v)
 _G.AutoBoltActionRifle = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Bolt Action Rifle") then
 if _G.AutoBoltActionRifle then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Bolt Action Rifle")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetBoltActionRifle()
 end
 end)
 end})
+function GetElectrocutioner()
+for _,v in ipairs(workspace.RuntimeItems:GetChildren()) do
+if v:FindFirstChildWhichIsA("Model") and v:IsA("Model") and v.Name:match("Electrocutioner") then
+if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude < 20 then
+local args = {[1] = v}
+game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
+end
+end
+end
+end
 Gun:AddCheckbox("AutoElectrocutioner", {
 	Text = "Tự Động Súng Điện",
 	Default = false,
 	Callback = function(v)
 _G.AutoElectrocutioner = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if workspace.RuntimeItems:FindFirstChild("Electrocutioner") then
 if _G.AutoElectrocutioner then
-local args = {
-    [1] = workspace.RuntimeItems:FindFirstChild("Electrocutioner")
-}
-
-game:GetService("ReplicatedStorage").Remotes.Tool.PickUpTool:FireServer(unpack(args))
-end
+GetElectrocutioner()
 end
 end)
 end})
