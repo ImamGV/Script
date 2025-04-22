@@ -1,0 +1,65 @@
+for _, v in ipairs(game.Players.LocalPlayer:GetDescendants()) do
+if v.Name == "FreecamGui" then
+v:Destroy()
+end
+end
+local FreecamGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+FreecamGui.Name = "FreecamGui"
+FreecamGui.ResetOnSpawn = false
+local FreecamFrame = Instance.new("Frame", FreecamGui)
+FreecamFrame.Position = UDim2.new(0.875, 0, 0, 0)
+FreecamFrame.BackgroundColor3 = Color3.new(0,0,0)
+FreecamFrame.BackgroundTransparency = 0.75
+FreecamFrame.Size = UDim2.new(0.1,0,0.1,0)
+local ToggleUI = Instance.new("TextButton", FreecamFrame)
+ToggleUI.Position = UDim2.new(0,0,0,0)
+ToggleUI.BackgroundColor3 = Color3.new(0,0,0)
+ToggleUI.BackgroundTransparency = 0.75
+ToggleUI.Size = UDim2.new(1,0,1,0)
+ToggleUI.Text = "Freecam : OFF"
+ToggleUI.TextSize = "16"
+ToggleUI.Font = "Roboto"
+ToggleUI.TextColor3 = Color3.new(1,1,1)
+
+local FreecamFrameStrokeUI = Instance.new("UIStroke", FreecamFrame)
+local FreecamFrameCornerUI = Instance.new("UICorner", FreecamFrame)
+local ToggleUICornerUI = Instance.new("UICorner", ToggleUI)
+local ToggleUIStrokeUI = Instance.new("UIStroke", ToggleUI)
+FreecamFrameStrokeUI.Thickness = 0.5
+ToggleUIStrokeUI.Color = Color3.new(0,1,1)
+
+ToggleUI.MouseButton1Click:Connect(function()
+_G.Freecam = not _G.Freecam
+if _G.Freecam then
+ToggleUI.Text = "Freecam : ON"
+Freecam = game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false
+if _G.Freecam then
+game.Players.LocalPlayer.Character.Humanoid:ChangeState(4.999)
+end
+if _G.Freecam then
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * 2)
+end
+game.Players.LocalPlayer.Character:FindFirstChild("Torso").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChild("Right Arm").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChild("Left Arm").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChild("Right Leg").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChild("Left Leg").Anchored = true
+game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Accessory"):FindFirstChildWhichIsA("MeshPart").Anchored = true
+end)
+else
+ToggleUI.Text = "Freecam : OFF"
+Freecam:Disconnect()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
+game.Players.LocalPlayer.Character:FindFirstChild("Torso").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("Right Arm").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("Left Arm").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("Right Leg").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("Left Leg").Anchored = false
+game.Players.LocalPlayer.Character:FindFirstChild("Torso").Anchored = true
+wait(0.3)
+game.Players.LocalPlayer.Character:FindFirstChild("Torso").Anchored = false
+end
+end)
