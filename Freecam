@@ -28,6 +28,40 @@ local ToggleUIStrokeUI = Instance.new("UIStroke", ToggleUI)
 FreecamFrameStrokeUI.Thickness = 0.5
 ToggleUIStrokeUI.Color = Color3.new(0,1,1)
 
+local Drag = false
+local DragInput, DragStart, StartPos
+ 
+local function Update(input)
+    local Delta = input.Position - DragStart
+    FreecamFrame.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + Delta.X, StartPos.Y.Scale, StartPos.Y.Offset + Delta.Y)
+end
+ 
+FreecamFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        Drag = true
+        DragStart = input.Position
+        StartPos = FreecamFrame.Position
+ 
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                Drag = false
+            end
+        end)
+    end
+end)
+ 
+FreecamFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        DragInput = input
+    end
+end)
+ 
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if Drag and input == DragInput then
+        Update(input)
+    end
+end)
+
 ToggleUI.MouseButton1Click:Connect(function()
 _G.Freecam = not _G.Freecam
 if _G.Freecam then
