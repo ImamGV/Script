@@ -25,8 +25,8 @@ local FreecamFrameStrokeUI = Instance.new("UIStroke", FreecamFrame)
 local FreecamFrameCornerUI = Instance.new("UICorner", FreecamFrame)
 local ToggleUICornerUI = Instance.new("UICorner", ToggleUI)
 local ToggleUIStrokeUI = Instance.new("UIStroke", ToggleUI)
+FreecamFrameStrokeUI.Color = Color3.new(0,1,1)
 FreecamFrameStrokeUI.Thickness = 0.5
-ToggleUIStrokeUI.Color = Color3.new(0,1,1)
 
 local Drag = false
 local DragInput, DragStart, StartPos
