@@ -131,7 +131,7 @@ _G.SpeedBoostValue = v
 end})
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.SpeedBoost then
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SpeedBoostValue)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SpeedBoostValue/_G.SpeedBoostValue)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
 end
 end)
@@ -246,33 +246,6 @@ end
 end})
 Tabs.Main:AddSection({"Other"})
 Tabs.Main:AddToggle({
-	Name = "AFK Screen",
-	Callback = function(value)
-if value then
-local ScreenGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Name = "AFKScreen"
-local ImageLabel = Instance.new("TextLabel", ScreenGui)
-ImageLabel.Position = UDim2.new(0,0,0,0)
-ImageLabel.BackgroundColor3 = Color3.fromRGB(90,0,255)
-ImageLabel.BackgroundTransparency = 0.5
-ImageLabel.Size = UDim2.new(1,0,1,0)
-ImageLabel.Text = "YOUHUB\nAFK Screen\nPlaytime:" .. workspace.DistributedGameTime
-ImageLabel.TextSize = "50"
-ImageLabel.Font = "Bodoni"
-ImageLabel.TextColor3 = Color3.new(1,1,1)
-game:GetService("RunService").RenderStepped:Connect(function()
-ImageLabel.Text = string.format("%s%1.f", "YOUHUB\nAFK Screen\nPlaytime:",workspace.DistributedGameTime)
-end)
-else
-for _,v in pairs(game.Players:GetDescendants()) do
-if v.Name == "AFKScreen" then
-v:Destroy()
-end
-end
-end
-end})
-Tabs.Main:AddToggle({
 	Name = "Round Timer UI",
 	Callback = function(value)
 if value then
@@ -295,7 +268,7 @@ ImageLabel.Font = "Roboto"
 ImageLabel.TextColor3 = Color3.new(1,1,1)
 local UiCorner = Instance.new("UICorner", Frame)
 local UiStroke = Instance.new("UIStroke", Frame)
-UiStroke.Color = Color3.fromRGB(14,174,255)
+UiStroke.Color = Color3.fromRGB(0,255,150)
 UiStroke.Thickness = 2
 game:GetService("RunService").RenderStepped:Connect(function()
 ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
