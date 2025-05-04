@@ -67,20 +67,20 @@ if value then
 local part = Instance.new("Part", workspace)
    part.Anchored = true
    part.CFrame = CFrame.new(100, 996, 100)
-   part.Material = "Plastic"
-   part.Transparency = 1
+   part.Material = "Neon"
+   part.Transparency = 0
    part.Size = Vector3.new(10000,1,10000)
 local part2 = Instance.new("Part", workspace)
    part2.Anchored = true
    part2.CFrame = CFrame.new(100, 1496, 100)
    part2.Material = "Neon"
-   part2.Transparency = 1
+   part2.Transparency = 0
    part2.Size = Vector3.new(10000,1,10000)
 local part3 = Instance.new("Part", workspace)
    part3.Anchored = true
    part3.CFrame = CFrame.new(100, 1996, 100)
    part3.Material = "Neon"
-   part3.Transparency = 1
+   part3.Transparency = 0
    part3.Size = Vector3.new(10000,1,10000)
 end
 while _G.AFK do wait(0.3)
@@ -131,7 +131,7 @@ _G.SpeedBoostValue = v
 end})
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.SpeedBoost then
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SpeedBoostValue/_G.SpeedBoostValue * 1.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * _G.SpeedBoostValue)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
 end
 end)
