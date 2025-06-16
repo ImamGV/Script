@@ -28,16 +28,6 @@ local Highlight = Instance.new('Highlight', Child)
         Highlight.FillTransparency = 1
         Highlight.OutlineTransparency =  0
         Highlight.Name = Title
-        for i = 1, 100 do
-        if Child:FindFirstChildOfClass("BasePart") then
-        break
-        end
-        if i == 100 then
-        return
-        end
-        end
-        Child:FindFirstChildOfClass("BasePart").Transparency = 0
-        Instance.new("Humanoid",Child)
 end
 function Library:Delete(name)
 for _,v in ipairs(workspace:GetDescendants()) do
