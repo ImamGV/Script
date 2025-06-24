@@ -28,6 +28,16 @@ local Highlight = Instance.new('Highlight', Child)
         Highlight.FillTransparency = 1
         Highlight.OutlineTransparency =  0
         Highlight.Name = Title
+task.spawn(function()
+while true do
+if getgenv().DistanceESP then
+Text.Text = string.format("%s\n[%s]", Name or Child.Name, math.floor((game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position - Child:GetPivot().Position).Magnitude))
+else
+Text.Text = Name
+end
+wait()
+end
+end)
 end
 function Library:Delete(name)
 for _,v in ipairs(workspace:GetDescendants()) do
